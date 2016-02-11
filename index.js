@@ -9,8 +9,10 @@ fs.readFile('./public/index.html', function(err, data){
 })
 
 console.log('Hello Andrew')
-var server = http.createServer(function(request, response){
 
+var server = http.createServer(function(request, response){
+	response.writeHead('Content-Type', 'text/plain')
+	response.end('Hello Wooorld')
 })
 
 server.listen(3000, function(){
