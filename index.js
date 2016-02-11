@@ -13,14 +13,20 @@ console.log('Hello Andrew')
 var server = http.createServer(function(request, response){
 
 	console.log('Recieving request' + request.url)
-	if (request.url == '/home') {
-		response.writeHead('Content-Type', 'text/plain')
-		response.end('Home')
-		console.log('Im Home')
-	}else{
-		response.writeHead('Content-Type', 'text/plain')
-		response.end('404')
-		console.log('Not found')
+
+	switch (request.url) {
+		case '/':
+			// Return index.html
+			fs.readFile('./public/index.html', function(err, data){
+				if (err) {
+					return console.log('The file couldnt be opened' + err.message)
+				}
+				response.end( data.toString() )
+			})
+			break
+		default:
+			response.end('')
+			break
 	}
 	
 })
