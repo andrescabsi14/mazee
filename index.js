@@ -11,8 +11,18 @@ fs.readFile('./public/index.html', function(err, data){
 console.log('Hello Andrew')
 
 var server = http.createServer(function(request, response){
-	response.writeHead('Content-Type', 'text/plain')
-	response.end('Hello Wooorld')
+
+	console.log('Recieving request' + request.url)
+	if (request.url == '/home') {
+		response.writeHead('Content-Type', 'text/plain')
+		response.end('Home')
+		console.log('Im Home')
+	}else{
+		response.writeHead('Content-Type', 'text/plain')
+		response.end('404')
+		console.log('Not found')
+	}
+	
 })
 
 server.listen(3000, function(){
