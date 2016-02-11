@@ -24,6 +24,24 @@ var server = http.createServer(function(request, response){
 				response.end( data.toString() )
 			})
 			break
+		case '/app.js':
+			// Return index.html
+			fs.readFile('./public/app.js', function(err, data){
+				if (err) {
+					return console.log('The file couldnt be opened' + err.message)
+				}
+				response.end( data.toString() )
+			})
+			break
+		case '/app.css':
+			// Return index.html
+			fs.readFile('./public/app.css', function(err, data){
+				if (err) {
+					return console.log('The file couldnt be opened' + err.message)
+				}
+				response.end( data.toString() )
+			})
+			break
 		default:
 			response.end('')
 			break
