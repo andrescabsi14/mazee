@@ -1,54 +1,68 @@
 var fs = require('fs');
 var http = require('http');
 
-fs.readFile('./public/index.html', function(err, data){
-	if (err) {
-		return console.log('The file couldnt be opened' + err.message)
-	}
-	console.log(data.toString().length)
-})
+// Server Functions
+//////////////////////////////////
+function serveStatic(filePath, callback){
+	fs.readFile('public/' + filePath, function(err, data){
+		if (err) {
+			return callback(err)
+		}
+		callback( err, data.toString() )
+	})
+}
 
-console.log('Hello Andrew')
-
+// Create Server
+//////////////////////////////////
 var server = http.createServer(function(request, response){
 
 	console.log('Recieving request' + request.url)
 
+	// End Points
+	//////////////////////////////////
 	switch (request.url) {
 		case '/':
 			// Return index.html
-			fs.readFile('./public/index.html', function(err, data){
+			serveStatic('index.html', function(err, content){
+				response.end(content)
 				if (err) {
-					return console.log('The file couldnt be opened' + err.message)
+					return response.end(err)
 				}
-				response.end( data.toString() )
 			})
 			break
 		case '/app.js':
 			// Return app.js
-			fs.readFile('./public/app.js', function(err, data){
+			serveStatic('app.js', function(err, content){
+				response.end(content)
 				if (err) {
-					return console.log('The file couldnt be opened' + err.message)
+					return response.end(err)
 				}
-				response.end( data.toString() )
 			})
 			break
 		case '/app.css':
 			// Return app.css
-			fs.readFile('./public/app.css', function(err, data){
+			serveStatic('app.css', function(err, content){
+				response.end(content)
 				if (err) {
-					return console.log('The file couldnt be opened' + err.message)
+					return response.end(err)
 				}
-				response.end( data.toString() )
 			})
 			break
 		default:
-			response.end('')
+			response.statusCode = 404
+			serveStatic('404.html', function(err, content){
+				response.end(content)
+				if (err) {
+					return response.end(err)
+				}
+			})
 			break
 	}
 	
 })
 
+// Start Server
+//////////////////////////////////
 server.listen(3000, function(){
 	console.info('Servidor iniciado en el puerto 3000')
 })
