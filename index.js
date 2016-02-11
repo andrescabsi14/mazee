@@ -1,16 +1,6 @@
-var fs = require('fs');
-var http = require('http');
-
-// Server Functions
-//////////////////////////////////
-function serveStatic(filePath, callback){
-	fs.readFile('public/' + filePath, function(err, data){
-		if (err) {
-			return callback(err)
-		}
-		callback( err, data.toString() )
-	})
-}
+var fs = require('fs')
+var http = require('http')
+var assets = require('./assets.js')
 
 // Create Server
 //////////////////////////////////
@@ -23,7 +13,7 @@ var server = http.createServer(function(request, response){
 	switch (request.url) {
 		case '/':
 			// Return index.html
-			serveStatic('index.html', function(err, content){
+			assets.serveStatic('index.html', function(err, content){
 				response.end(content)
 				if (err) {
 					return response.end(err)
@@ -32,7 +22,7 @@ var server = http.createServer(function(request, response){
 			break
 		case '/app.js':
 			// Return app.js
-			serveStatic('app.js', function(err, content){
+			assets.serveStatic('app.js', function(err, content){
 				response.end(content)
 				if (err) {
 					return response.end(err)
@@ -41,7 +31,7 @@ var server = http.createServer(function(request, response){
 			break
 		case '/app.css':
 			// Return app.css
-			serveStatic('app.css', function(err, content){
+			assets.serveStatic('app.css', function(err, content){
 				response.end(content)
 				if (err) {
 					return response.end(err)
@@ -50,7 +40,7 @@ var server = http.createServer(function(request, response){
 			break
 		default:
 			response.statusCode = 404
-			serveStatic('404.html', function(err, content){
+			assets.serveStatic('404.html', function(err, content){
 				response.end(content)
 				if (err) {
 					return response.end(err)
