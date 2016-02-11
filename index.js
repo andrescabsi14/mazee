@@ -25,7 +25,7 @@ var server = http.createServer(function(request, response){
 			})
 			break
 		case '/app.js':
-			// Return index.html
+			// Return app.js
 			fs.readFile('./public/app.js', function(err, data){
 				if (err) {
 					return console.log('The file couldnt be opened' + err.message)
@@ -34,7 +34,7 @@ var server = http.createServer(function(request, response){
 			})
 			break
 		case '/app.css':
-			// Return index.html
+			// Return app.css
 			fs.readFile('./public/app.css', function(err, data){
 				if (err) {
 					return console.log('The file couldnt be opened' + err.message)
