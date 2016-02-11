@@ -1,58 +1,59 @@
+// Module Dependencies
+////////////////////////////
 var fs = require('fs')
-var http = require('http')
-var assets = require('./assets.js')
+var EventEmitter = require('events')
+var util = require('util')
 
-// Create Server
-//////////////////////////////////
-var server = http.createServer(function(request, response){
+//Alias
+var inherits = util.inherits
 
-	console.log('Recieving request' + request.url)
 
-	// End Points
-	//////////////////////////////////
-	switch (request.url) {
-		case '/':
-			// Return index.html
-			assets.serveStatic('index.html', function(err, content){
-				response.end(content)
-				if (err) {
-					return response.end(err)
-				}
-			})
-			break
-		case '/app.js':
-			// Return app.js
-			assets.serveStatic('app.js', function(err, content){
-				response.end(content)
-				if (err) {
-					return response.end(err)
-				}
-			})
-			break
-		case '/app.css':
-			// Return app.css
-			assets.serveStatic('app.css', function(err, content){
-				response.end(content)
-				if (err) {
-					return response.end(err)
-				}
-			})
-			break
-		default:
-			response.statusCode = 404
-			assets.serveStatic('404.html', function(err, content){
-				response.end(content)
-				if (err) {
-					return response.end(err)
-				}
-			})
-			break
-	}
-	
+// FUNCTION DECLARATION 
+///////////////////////////
+
+// Function to re deferr his process to avoid blocked process
+function readFileText (name, callback) {
+	process.nextTick(function(){
+		var content = fs.readFileSync(name)
+		callback( content.toString() )
+	})
+}
+
+
+// INHERIT NODE EVENTS
+///////////////////////////
+
+//Constructor class
+function TextReader(name){
+	EventEmitter.call(this)
+	this.name = name
+}
+
+// Inherit from Event Emitter
+inherits(TextReader, EventEmitter)
+
+
+//Add to Class read Method
+TextReader.prototype.read = function(){
+	var self = this
+	readFileText(this.name, function(content){
+		self.emit('end', content)
+	})
+}
+
+
+// INSTANTIATE AND INVOKE 
+///////////////////////////
+
+// Instance
+var reader = new TextReader('public/lorem.txt')
+
+// Subscribe to event
+reader.on('end', function(content){
+	console.log(content)
 })
 
-// Start Server
-//////////////////////////////////
-server.listen(3000, function(){
-	console.info('Servidor iniciado en el puerto 3000')
-})
+// Read File
+reader.read();
+
+console.log('test server')
